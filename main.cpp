@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-//we add new node (Transaction)
+
 struct Transaction {
     string date;
     double amount ;
@@ -13,7 +13,7 @@ struct Transaction {
 
 
 
-
+//we add new node (Transaction)
 void Add_Transaction(Transaction*& head ,string date , double amount , string type , string source , string status) {
     Transaction* Newnode = new Transaction{date,amount,type,source,nullptr,status};
     if(head == nullptr) {
@@ -31,6 +31,11 @@ void Add_Transaction(Transaction*& head ,string date , double amount , string ty
 
 
 void withdrawls(double value , double& current_amount,Transaction*&head,string date , string type , string source) {
+    if (value < 0) {
+            cout << "Invalid value!\n";
+            addTransaction(date, current_amount, "withdrawal", source, "Transaction Failed: Invalid value!");
+            return;
+        }
     if(current_amount>=value) {
         current_amount -= value;
         Add_Transaction(head, date, value, type, source, "Successful Transaction.");
@@ -45,6 +50,11 @@ void withdrawls(double value , double& current_amount,Transaction*&head,string d
 
 
 void Deposits(double value, double& current_amount, Transaction*& head, string date, string type, string source) {
+    if (value < 0) {
+            cout << "Invalid value!\n";
+            addTransaction(date, current_amount, "withdrawal", source, "Transaction Failed: Invalid value!");
+            return;
+        }
     current_amount += value;
     Add_Transaction(head, date, current_amount, type, source, "Successful Transaction.");
 }
@@ -105,7 +115,6 @@ void search_By_Date(Transaction* head, const string& date) {
             cout << "Type: " << temp->type << ", Amount: " << temp->amount
                  << ", Source: " << temp->source << "\n";
             found = true;
-            return;
         }
         temp = temp->next;
     }
@@ -171,6 +180,11 @@ int main() {
 
             pair<int , string > key = {id,name};
 
+              if (employees.find(key) == employees.end()) {
+                cout << "Employee not found.\n";
+                continue;
+            }
+
             if (type == "deposit") {
                 Deposits(amount, employeeBalances[key], employeeRecords[key], date, type, source);
             } else {
@@ -196,6 +210,12 @@ int main() {
             cout << "Enter date to search (YYYY-MM-DD): "; cin >> date;cout<<endl;
 
             pair<int, string> key = {id, name};
+            
+              if (employees.find(key) == employees.end()) {
+                cout << "Employee not found.\n";
+                continue;
+            }
+            
             search_By_Date(employeeRecords[key], date);
 
         } else if (option == 4) {
@@ -205,6 +225,12 @@ int main() {
             cout << "Enter employee name: "; cin >> name;cout<<endl;
 
             pair<int, string> key = make_pair(id, name);
+
+              if (employees.find(key) == employees.end()) {
+                cout << "Employee not found.\n";
+                continue;
+            }
+            
             double balance = Calculate_Balance(employeeRecords[key]);
             cout << "Current balance for " << name << " (ID: " << id << "): " << balance << "\n";
 
